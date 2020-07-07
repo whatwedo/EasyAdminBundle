@@ -37,6 +37,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Form\Type\FiltersFormType;
 use EasyCorp\Bundle\EasyAdminBundle\Orm\EntityRepository;
 use EasyCorp\Bundle\EasyAdminBundle\Orm\EntityUpdater;
 use EasyCorp\Bundle\EasyAdminBundle\Provider\AdminContextProvider;
+use EasyCorp\Bundle\EasyAdminBundle\Provider\CrudControllerProvider;
 use EasyCorp\Bundle\EasyAdminBundle\Provider\FieldProvider;
 use EasyCorp\Bundle\EasyAdminBundle\Router\CrudUrlGenerator;
 use EasyCorp\Bundle\EasyAdminBundle\Security\Permission;
@@ -95,6 +96,7 @@ abstract class AbstractCrudController extends AbstractController implements Crud
             FilterFactory::class => '?'.FilterFactory::class,
             FormFactory::class => '?'.FormFactory::class,
             PaginatorFactory::class => '?'.PaginatorFactory::class,
+            CrudControllerProvider::class => '?'.CrudControllerProvider::class,
         ]);
     }
 

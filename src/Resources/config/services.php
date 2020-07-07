@@ -68,6 +68,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Orm\EntityRepository;
 use EasyCorp\Bundle\EasyAdminBundle\Orm\EntityUpdater;
 use EasyCorp\Bundle\EasyAdminBundle\PropertyInfo\NestedExtractor;
 use EasyCorp\Bundle\EasyAdminBundle\Provider\AdminContextProvider;
+use EasyCorp\Bundle\EasyAdminBundle\Provider\CrudControllerProvider;
 use EasyCorp\Bundle\EasyAdminBundle\Provider\FieldProvider;
 use EasyCorp\Bundle\EasyAdminBundle\Registry\CrudControllerRegistry;
 use EasyCorp\Bundle\EasyAdminBundle\Registry\DashboardControllerRegistry;
@@ -344,5 +345,9 @@ return static function (ContainerConfigurator $container) {
         ->set(NestedExtractor::class)
             ->arg(0, new Reference(PropertyTypeExtractorInterface::class))
             ->tag('property_info.type_extractor', ['priority' => -998])
+
+        ->set(CrudControllerProvider::class)
+            ->arg(0, new Reference(CrudControllerRegistry::class))
+            ->arg(1, new Reference('controller_resolver'))
     ;
 };
