@@ -91,6 +91,8 @@ final class FilterDto
     public function setLabel($label): void
     {
         $this->label = $label;
+        // needed to also display the label in the form associated to the filter
+        $this->setFormTypeOption('label', $label);
     }
 
     public function setApplyCallable(callable $callable): void
