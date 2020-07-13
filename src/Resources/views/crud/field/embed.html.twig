@@ -24,6 +24,8 @@
 
 {{ include('@EasyAdmin/crud/includes/_delete_form.html.twig', {crud_id: crud_id, referrer: current_url, id_suffix: id_suffix}, with_context = false) }}
 
+{{ include('@EasyAdmin/crud/includes/_filters_modal.html.twig') }}
+
 <style>
     .embed-spinner {
         display: none;
@@ -48,9 +50,22 @@
     window.addEventListener('load', () => {
         const referrer = '{{ current_url|raw }}#embed{{ id_suffix }}'
         const initialUrl = '{{ url|raw }}'
+        let currentUrl = initialUrl;
 
         const embed = document.querySelector('#embed{{ id_suffix }}');
         const embedContent = embed.querySelector('.embed-content');
+
+        const handleFormSubmit = evt => {
+            evt.preventDefault();
+            const target = new URL(currentUrl);
+            target.search = new URLSearchParams(new FormData(evt.target)).toString();
+            load(target.toString())
+        }
+
+        const handleLinkClick = evt => {
+            evt.preventDefault();
+            load(evt.currentTarget.href)
+        }
 
         const load = (url) => {
             embed.classList.add('embed-loading');
@@ -58,6 +73,9 @@
                 .then(it => it.text())
                 .then(it => embedContent.innerHTML = it)
                 .then(() => {
+                    // store for later use
+                    currentUrl = url;
+
                     // override referrer of actions, so we get back to the "main" view afterwards, not the embed
                     embedContent.querySelectorAll('.actions a').forEach(action => {
                         const target = new URL(action.href)
@@ -83,23 +101,56 @@
                         });
                     })
 
+                    // remove "index" filter modal
+                    embedContent.querySelector('#modal-filters').remove();
+
+                    // HTML5 specifies that a <script> tag inserted with innerHTML should not execute
+                    // https://developer.mozilla.org/en-US/docs/Web/API/Element/innerHTML#Security_considerations
+                    // That's why we can't use just 'innerHTML'. See https://stackoverflow.com/a/47614491/2804294
+                    const setInnerHTML = function(element, htmlContent) {
+                        element.innerHTML = htmlContent;
+                        Array.from(element.querySelectorAll('script')).forEach(oldScript => {
+                            const newScript = document.createElement('script');
+                            Array.from(oldScript.attributes)
+                                .forEach(attr => newScript.setAttribute(attr.name, attr.value));
+                            newScript.appendChild(document.createTextNode(oldScript.innerHTML));
+                            oldScript.parentNode.replaceChild(newScript, oldScript);
+                        });
+                    };
+
+                    // initialize correct filter modal
+                    embedContent.querySelector('.action-filters-button').addEventListener('click', function(event) {
+                        let filterButton = event.currentTarget;
+                        let filterModal = document.querySelector(filterButton.dataset.modal);
+                        let filterModalBody = filterModal.querySelector('.modal-body');
+
+                        $(filterModal).modal({ backdrop: true, keyboard: true });
+                        filterModalBody.innerHTML = '<div class="fa-3x px-3 py-3 text-muted text-center"><i class="fas fa-circle-notch fa-spin"></i></div>';
+
+                        $.get(filterButton.getAttribute('href'), function (response) {
+                            setInnerHTML(filterModalBody, response);
+
+                            // intercept filter form
+                            filterModalBody.querySelector('form').addEventListener('submit', handleFormSubmit)
+                        });
+
+                        event.preventDefault();
+                        event.stopPropagation();
+                    });
+
+                    // intercept filter clear
+                    const resetFilters = embedContent.querySelector('.action-filters-reset');
+                    if(resetFilters) {
+                        resetFilters.addEventListener('click', handleLinkClick)
+                    }
+
                     // intercept sort and pagination
                     embedContent.querySelectorAll('thead a, .pagination a').forEach(link => {
-                        link.addEventListener('click', evt => {
-                            evt.preventDefault();
-                            load(link.href)
-                        })
+                        link.addEventListener('click', handleLinkClick)
                     })
 
                     // intercept search
-                    embedContent.querySelector('.form-action-search form').addEventListener('submit', evt => {
-                        evt.preventDefault();
-                        const data = new FormData(evt.target);
-                        const params = new URLSearchParams(data).toString()
-                        const target = new URL(url);
-                        target.search = params.toString();
-                        load(target.toString())
-                    })
+                    embedContent.querySelector('.form-action-search form').addEventListener('submit', handleFormSubmit)
 
                     // highlight results
                     const searchQuery = new URL(url).searchParams.get('query');
