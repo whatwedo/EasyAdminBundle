@@ -102,6 +102,9 @@
     <div class="{{ field.cssClass }}">
         <div class="content-panel">
             <div class="content-panel-header">
+                {% if field.customOption('icon') %}
+                    <i class="{{ field.customOption('icon') }}"></i>
+                {% endif %}
                 {{ field.label|raw }}
                 {% if collapsible %}
                     <a href="#content-{{ field.property }}" data-toggle="collapse" class="content-panel-collapse {{ collapsed ? 'collapsed' }}" aria-expanded="{{ collapsed ? 'false' : 'true' }}" aria-controls="content-{{ field.property }}">
