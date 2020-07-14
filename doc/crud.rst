@@ -135,7 +135,7 @@ Title and Help Options
             ->setPageTitle('index', '%entity_label_plural% listing')
 
             // the help message displayed to end users (it can contain HTML tags)
-            ->setHelpMessage('edit', '...')
+            ->setHelp('edit', '...')
         ;
     }
 
@@ -488,12 +488,14 @@ associated to. If you have more than one dashboard, you must also set the Dashbo
             // if your application only contains one Dashboard, it's enough
             // to define the controller related to this URL
             $url = $this->crudUrlGenerator
+                ->build()
                 ->setController(ProductCrudController::class)
                 ->setAction(Action::INDEX);
 
             // in applications containing more than one Dashboard, you must also
             // define the Dashboard associated to the URL
             $url = $this->crudUrlGenerator
+                ->build()
                 ->setDashboard(DashboardController::class)
                 ->setController(ProductCrudController::class)
                 ->setAction(Action::INDEX);
