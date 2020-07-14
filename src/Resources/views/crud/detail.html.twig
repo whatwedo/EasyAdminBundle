@@ -97,6 +97,7 @@
 {% endmacro %}
 
 {% macro open_content_panel_with_header(field) %}
+    {% set actions = field.customOption('actions') %}
     {% set collapsible = field.customOption('collapsible') %}
     {% set collapsed = field.customOption('collapsed') %}
     <div class="{{ field.cssClass }}">
@@ -111,6 +112,16 @@
                         <i class="fa fa-plus-square expand-icon"></i>
                         <i class="fa fa-minus-square collapse-icon"></i>
                     </a>
+                {% endif %}
+
+                {% if actions %}
+                    <div class="d-inline-block float-right">
+                        <div class="page-actions">
+                        {% for action in actions %}
+                            {{ include(action.templatePath, { action: action }, with_context = false) }}
+                        {% endfor %}
+                        </div>
+                    </div>
                 {% endif %}
 
                 {% if field.help is not empty %}

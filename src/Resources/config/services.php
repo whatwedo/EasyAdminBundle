@@ -315,6 +315,7 @@ return static function (ContainerConfigurator $container) {
         ->set(EmailConfigurator::class)
 
         ->set(FormConfigurator::class)
+            ->arg(0, new Reference(ActionFactory::class))
 
         ->set(IdConfigurator::class)
 

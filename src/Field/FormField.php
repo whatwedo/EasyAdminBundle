@@ -18,6 +18,10 @@ final class FormField implements FieldInterface
     public const OPTION_COLLAPSIBLE = 'collapsible';
     public const OPTION_COLLAPSED = 'collapsed';
 
+    public const OPTION_CONFIGURE_ACTIONS = 'configureActions';
+    /** @internal this option is intended for internal use only */
+    public const OPTION_ACTIONS = 'actions';
+
     /**
      * @internal Use the other named constructors instead (addPanel(), etc.)
      */
@@ -41,7 +45,8 @@ final class FormField implements FieldInterface
             ->setFormTypeOptions(['mapped' => false, 'required' => false])
             ->setCustomOption(self::OPTION_ICON, null)
             ->setCustomOption(self::OPTION_COLLAPSIBLE, false)
-            ->setCustomOption(self::OPTION_COLLAPSED, false);
+            ->setCustomOption(self::OPTION_COLLAPSED, false)
+            ->setCustomOption(self::OPTION_CONFIGURE_ACTIONS, null);
     }
 
     public function setIcon(string $iconCssClass): self
@@ -61,6 +66,13 @@ final class FormField implements FieldInterface
     public function collapsed(bool $collapsed = true): self
     {
         $this->setCustomOption(self::OPTION_COLLAPSED, $collapsed);
+
+        return $this;
+    }
+
+    public function configureActions(\Closure $configure): self
+    {
+        $this->setCustomOption(self::OPTION_CONFIGURE_ACTIONS, $configure);
 
         return $this;
     }
