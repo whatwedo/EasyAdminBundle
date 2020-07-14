@@ -102,7 +102,10 @@
                     })
 
                     // remove "index" filter modal
-                    embedContent.querySelector('#modal-filters').remove();
+                    const indexFilterModal = embedContent.querySelector('#modal-filters');
+                    if(indexFilterModal) {
+                        indexFilterModal.remove();
+                    }
 
                     // HTML5 specifies that a <script> tag inserted with innerHTML should not execute
                     // https://developer.mozilla.org/en-US/docs/Web/API/Element/innerHTML#Security_considerations
