@@ -76,11 +76,15 @@
                     // store for later use
                     currentUrl = url;
 
-                    // override referrer of actions, so we get back to the "main" view afterwards, not the embed
-                    embedContent.querySelectorAll('.actions a').forEach(action => {
-                        const target = new URL(action.href)
+                    // override referrer of links, so we get back to the "main" view afterwards, not the embed
+                    // strip embedContext from all links, because we do not want to persist that through other views
+                    embedContent.querySelectorAll('a').forEach(link => {
+                        const target = new URL(link.href)
                         target.searchParams.set('referrer', referrer);
-                        action.href = target.toString();
+                        Array.from(target.searchParams.keys())
+                            .filter(key => key.startsWith('embedContext['))
+                            .forEach(key => target.searchParams.delete(key))
+                        link.href = target.toString();
                     })
 
                     // remove "index" delete form/modal
