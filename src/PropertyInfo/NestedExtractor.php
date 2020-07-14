@@ -32,15 +32,16 @@ class NestedExtractor implements PropertyTypeExtractorInterface
         $currentClass = $class;
         $types = null;
         foreach (explode('.', $property) as $part) {
+            if ($currentClass === null) {
+                return null;
+            }
+
             $types = $this->infoExtractor->getTypes($currentClass, $part, $context);
             if ($types === null) {
                 return null;
             }
 
             $currentClass = $types[0]->getClassName();
-            if ($currentClass === null) {
-                return null;
-            }
         }
 
         return $types;
