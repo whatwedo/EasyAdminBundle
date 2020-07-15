@@ -76,10 +76,10 @@
                     // store for later use
                     currentUrl = url;
 
-                    // modify all links inside table (actions and related entities, but not sort and pagination)
+                    // modify all "outside" links (actions and related entities, but not sort and pagination)
                     // set referrer to current element, so we get back to the "main" view afterwards, not the embed
                     // strip embedContext from all links, because we do not want to persist that through other views
-                    embedContent.querySelectorAll('tbody a').forEach(link => {
+                    embedContent.querySelectorAll('tbody a, .page-actions a').forEach(link => {
                         const target = new URL(link.href)
                         target.searchParams.set('referrer', referrer);
                         Array.from(target.searchParams.keys())

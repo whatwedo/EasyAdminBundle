@@ -8,3 +8,6 @@
 {% set sort_order = app.request.get('sort')|first %}
 
 {{ block("main", "@EasyAdmin/crud/index.html.twig") }}
+<div class="page-actions">
+    {{ block("page_actions", "@EasyAdmin/crud/index.html.twig") }}
+</div>
