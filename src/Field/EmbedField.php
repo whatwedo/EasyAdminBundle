@@ -12,11 +12,21 @@ final class EmbedField implements FieldInterface
 {
     use FieldTrait;
 
+    public const OPTION_MODIFY_ACTIONS = 'modifyActions';
+
     public static function new(string $propertyName, ?string $label = null): self
     {
         return (new self())
             ->setProperty($propertyName)
             ->setLabel($label)
-            ->setTemplateName('crud/field/embed');
+            ->setTemplateName('crud/field/embed')
+            ->setCustomOption(self::OPTION_MODIFY_ACTIONS, null);
+    }
+
+    public function modifyActions(\Closure $configure): self
+    {
+        $this->setCustomOption(self::OPTION_MODIFY_ACTIONS, $configure);
+
+        return $this;
     }
 }

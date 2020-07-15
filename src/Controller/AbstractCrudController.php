@@ -36,6 +36,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Factory\FilterFactory;
 use EasyCorp\Bundle\EasyAdminBundle\Factory\FormFactory;
 use EasyCorp\Bundle\EasyAdminBundle\Factory\PaginatorFactory;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\EmbedField;
 use EasyCorp\Bundle\EasyAdminBundle\Form\Type\FiltersFormType;
 use EasyCorp\Bundle\EasyAdminBundle\Orm\EntityRepository;
 use EasyCorp\Bundle\EasyAdminBundle\Orm\EntityUpdater;
@@ -128,13 +129,31 @@ abstract class AbstractCrudController extends AbstractController implements Crud
             $queryBuilder->andWhere($queryBuilder->expr()->eq(sprintf('%s.%s', current($queryBuilder->getRootAliases()), $filterProperty), $filterValue));
 
             $fields->unset($fields->get($filterProperty));
+
+            $controllerFqcn = $embedContext['controllerFqcn'];
+            $fieldName = $embedContext['fieldName'];
+
+            /** @var CrudControllerInterface $embedController */
+            $embedController = $this->get(ControllerFactory::class)->getCrudController($controllerFqcn, Action::INDEX, $context->getRequest());
+            /** @var FieldDto $embedField */
+            $embedField = FieldCollection::new($embedController->configureFields(Crud::PAGE_INDEX))->get($fieldName);
         }
 
         $paginator = $this->get(PaginatorFactory::class)->create($queryBuilder);
 
         $entities = $this->get(EntityFactory::class)->createCollection($context->getEntity(), $paginator->getResults());
         $this->get(EntityFactory::class)->processFieldsForAll($entities, $fields);
-        $globalActions = $this->get(EntityFactory::class)->processActionsForAll($entities, $context->getCrud()->getActionsConfig());
+        $actionConfigDto = $context->getCrud()->getActionsConfig();
+        if($embedContext) {
+            /** @var \Closure|null $modifyActions */
+            $modifyActions = $embedField->getCustomOption(EmbedField::OPTION_MODIFY_ACTIONS);
+
+            if(null !== $modifyActions)
+            {
+                $modifyActions($actionConfigDto);
+            }
+        }
+        $globalActions = $this->get(EntityFactory::class)->processActionsForAll($entities, $actionConfigDto);
 
         $responseParameters = $this->configureResponseParameters(KeyValueStore::new([
             'pageName' => Crud::PAGE_INDEX,
