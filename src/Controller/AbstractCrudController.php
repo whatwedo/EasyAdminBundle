@@ -143,17 +143,21 @@ abstract class AbstractCrudController extends AbstractController implements Crud
 
         $entities = $this->get(EntityFactory::class)->createCollection($context->getEntity(), $paginator->getResults());
         $this->get(EntityFactory::class)->processFieldsForAll($entities, $fields);
-        $actionConfigDto = $context->getCrud()->getActionsConfig();
         if($embedContext) {
             /** @var \Closure|null $modifyActions */
             $modifyActions = $embedField->getCustomOption(EmbedField::OPTION_MODIFY_ACTIONS);
 
             if(null !== $modifyActions)
             {
-                $modifyActions($actionConfigDto);
+                $dashboardController = $this->get(ControllerFactory::class)->getDashboardController($context->getDashboardControllerFqcn(), $context->getRequest());
+                $actions = $dashboardController->configureActions();
+
+                $embedController->configureActions($actions);
+                $modifyActions($actions);
+                $context->getCrud()->setActionsConfig($actions->getAsDto(Crud::PAGE_INDEX));
             }
         }
-        $globalActions = $this->get(EntityFactory::class)->processActionsForAll($entities, $actionConfigDto);
+        $globalActions = $this->get(EntityFactory::class)->processActionsForAll($entities, $context->getCrud()->getActionsConfig());
 
         $responseParameters = $this->configureResponseParameters(KeyValueStore::new([
             'pageName' => Crud::PAGE_INDEX,
