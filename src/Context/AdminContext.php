@@ -96,6 +96,11 @@ final class AdminContext
         return $this->dashboardDto->getTitle();
     }
 
+    public function getDashboardLogoPath(): string
+    {
+        return $this->dashboardDto->getLogoPath();
+    }
+
     public function getDashboardFaviconPath(): string
     {
         return $this->dashboardDto->getFaviconPath();

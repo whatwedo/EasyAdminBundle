@@ -100,6 +100,7 @@ body.ea-sidebar-width-compact .wrapper {
     font-weight: 600;
     line-height: 1;
     margin: 0;
+    width: var(--sidebar-max-width);
 }
 .main-header #header-logo a {
     color: var(--text-color);

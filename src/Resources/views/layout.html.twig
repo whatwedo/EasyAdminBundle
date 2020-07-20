@@ -67,7 +67,11 @@
                             <div id="header-logo">
                                 {% block header_logo %}
                                     <a class="logo {{ ea.dashboardTitle|length > 14 ? 'logo-long' }}" title="{{ ea.dashboardTitle|striptags }}" href="{{ path(ea.dashboardRouteName) }}">
-                                        {{ ea.dashboardTitle|raw }}
+                                        {% if ea.dashboardLogoPath %}
+                                            <img src="{{ asset(ea.dashboardLogoPath) }}" alt="{{ ea.dashboardTitle|striptags }}" />
+                                        {% else %}
+                                            {{ ea.dashboardTitle|raw }}
+                                        {% endif %}
                                     </a>
                                 {% endblock header_logo %}
                             </div>

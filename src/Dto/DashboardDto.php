@@ -9,6 +9,7 @@ final class DashboardDto
 {
     private $routeName;
     private $faviconPath;
+    private $logoPath;
     private $title;
     private $translationDomain;
     private $textDirection;
@@ -38,6 +39,16 @@ final class DashboardDto
     public function setFaviconPath(string $faviconPath): void
     {
         $this->faviconPath = $faviconPath;
+    }
+
+    public function getLogoPath(): ?string
+    {
+        return $this->logoPath;
+    }
+
+    public function setLogoPath(?string $logoPath): void
+    {
+        $this->logoPath = $logoPath;
     }
 
     public function getTitle(): string

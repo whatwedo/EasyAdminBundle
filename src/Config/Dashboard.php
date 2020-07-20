@@ -31,6 +31,13 @@ final class Dashboard
         return $this;
     }
 
+    public function setLogoPath(?string $logoPath): self
+    {
+        $this->dto->setLogoPath($logoPath);
+
+        return $this;
+    }
+
     public function setTitle(string $title): self
     {
         $this->dto->setTitle($title);
