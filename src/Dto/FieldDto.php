@@ -18,6 +18,7 @@ final class FieldDto
     private $formattedValue;
     private $formatValueCallable;
     private $label;
+    private $hideLabel;
     private $formType;
     private $formTypeOptions;
     private $sortable;
@@ -40,6 +41,7 @@ final class FieldDto
     public function __construct()
     {
         $this->cssClass = '';
+        $this->hideLabel = false;
         $this->assets = new AssetsDto();
         $this->translationParameters = [];
         $this->formTypeOptions = KeyValueStore::new();
@@ -145,6 +147,16 @@ final class FieldDto
     public function setLabel(?string $label): void
     {
         $this->label = $label;
+    }
+
+    public function getHideLabel(): bool
+    {
+        return $this->hideLabel;
+    }
+
+    public function setHideLabel(bool $hideLabel): void
+    {
+        $this->hideLabel = $hideLabel;
     }
 
     public function getFormType(): ?string

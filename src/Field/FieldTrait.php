@@ -300,6 +300,13 @@ trait FieldTrait
 
         return $this;
     }
+    
+    public function hideLabel(): self
+    {
+        $this->dto->setHideLabel(true);
+
+        return $this;
+    }
 
     public function getAsDto(): FieldDto
     {
