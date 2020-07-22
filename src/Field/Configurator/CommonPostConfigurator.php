@@ -8,6 +8,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Contracts\Field\FieldConfiguratorInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\FieldDto;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\EmbedField;
 use EasyCorp\Bundle\EasyAdminBundle\Provider\AdminContextProvider;
 use function Symfony\Component\String\u;
 
@@ -50,8 +51,13 @@ final class CommonPostConfigurator implements FieldConfiguratorInterface
 
     private function updateFieldTemplate(FieldDto $field): void
     {
+        $fieldFqcn = $field->getFieldFqcn();
+        // EmbedField handles the empty state internally
+        if(EmbedField::class === $fieldFqcn) {
+            return;
+        }
         $usesEasyAdminTemplate = u($field->getTemplatePath())->startsWith('@EasyAdmin/');
-        $isBooleanField = BooleanField::class === $field->getFieldFqcn();
+        $isBooleanField = BooleanField::class === $fieldFqcn;
         $isNullValue = null === $field->getFormattedValue();
         $isEmpty = is_countable($field->getFormattedValue()) ? 0 === \count($field->getFormattedValue()) : false;
 
