@@ -186,7 +186,7 @@ final class AdminContextFactory
             $crudDto->setEntityLabelInSingular($translatedSingularLabel);
             $crudDto->setEntityLabelInPlural($translatedPluralLabel);
 
-            $translationParameters['%entity_label_singular%'] = $translatedSingularLabel;
+            $translationParameters['%entity_label_singular%'] = strip_tags($translatedSingularLabel);
             $translationParameters['%entity_label_plural%'] = $translatedPluralLabel;
         }
 
