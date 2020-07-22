@@ -19,6 +19,7 @@ final class EmbedField implements FieldInterface
         return (new self())
             ->setProperty($propertyName)
             ->setLabel($label)
+            ->hideLabel()
             ->setTemplateName('crud/field/embed')
             ->setCustomOption(self::OPTION_MODIFY_ACTIONS, null);
     }
