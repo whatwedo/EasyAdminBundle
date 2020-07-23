@@ -60,7 +60,7 @@ function createAutoCompleteFields() {
                     dataType: 'json',
                     delay: 250,
                     data: function (params) {
-                        return { 'query': params.term, 'page': params.page };
+                        return { 'query': params.term, 'page': params.page, 'formData': JSON.stringify(Object.fromEntries(new FormData($this.closest('form').get(0)))) };
                     },
                     // to indicate that infinite scrolling can be used
                     processResults: function (data, params) {
