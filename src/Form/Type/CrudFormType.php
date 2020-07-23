@@ -73,7 +73,6 @@ class CrudFormType extends AbstractType
                     'collapsed' => $fieldDto->getCustomOptions()->get(FormField::OPTION_COLLAPSED),
                     'help' => $fieldDto->getHelp(),
                     'css_class' => $fieldDto->getCssClass(),
-                    'columns' => $fieldDto->getColumns(),
                 ];
 
                 continue;
