@@ -356,7 +356,7 @@
         {% set collapsed = panel_config.collapsed %}
         {% set actions = panel_config.actions %}
 
-        <div class="{{ panel_config.css_class ?? '' }}">
+        <div class="{{ panel_config.css_class ?? '' }} {{ panel_config.columns }}">
             <div class="content-panel">
                 {% if panel_has_header %}
                     <div class="content-panel-header">

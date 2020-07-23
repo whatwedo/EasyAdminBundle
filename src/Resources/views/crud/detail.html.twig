@@ -83,7 +83,7 @@
 
 {% macro open_empty_content_panel(field) %}
 
-<div class="{{ field.cssClass }}">
+<div class="{{ field.cssClass }} {{ field.columns }}">
     <div class="content-panel">
         <div class="content-panel-body without-header without-footer without-padding">
             <dl class="datalist">
@@ -100,7 +100,7 @@
     {% set actions = field.customOption('actions') %}
     {% set collapsible = field.customOption('collapsible') %}
     {% set collapsed = field.customOption('collapsed') %}
-    <div class="{{ field.cssClass }}">
+    <div class="{{ field.cssClass }} {{ field.columns }}">
         <div class="content-panel">
             <div class="content-panel-header">
                 {% if field.customOption('icon') %}

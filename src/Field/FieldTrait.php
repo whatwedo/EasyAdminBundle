@@ -308,6 +308,13 @@ trait FieldTrait
         return $this;
     }
 
+    public function setColumns(string $columns): self
+    {
+        $this->dto->setColumns($columns);
+
+        return $this;
+    }
+
     public function getAsDto(): FieldDto
     {
         return $this->dto;

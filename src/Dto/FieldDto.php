@@ -27,6 +27,7 @@ final class FieldDto
     private $textAlign;
     private $help;
     private $cssClass;
+    private $columns;
     private $translationParameters;
     private $templateName;
     private $templatePath;
@@ -41,6 +42,7 @@ final class FieldDto
     public function __construct()
     {
         $this->cssClass = '';
+        $this->columns = 'col-12';
         $this->hideLabel = false;
         $this->assets = new AssetsDto();
         $this->translationParameters = [];
@@ -363,5 +365,17 @@ final class FieldDto
     public function isDisplayedOn(string $pageName): bool
     {
         return $this->displayedOn->has($pageName);
+    }
+
+    public function getColumns(): string
+    {
+        return $this->columns;
+    }
+
+    public function setColumns(string $columns): FieldDto
+    {
+        $this->columns = $columns;
+
+        return $this;
     }
 }
