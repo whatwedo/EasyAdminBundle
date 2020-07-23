@@ -42,7 +42,7 @@
 </head>
 
 {% block body %}
-    <body id="{% block body_id %}{% endblock %}" class="ea {% block body_class %}{% endblock %}">
+    <body id="{% block body_id %}{% endblock %}" class="ea {{ entity is defined ? 'ea-entity-' ~ entity.name}} {% block body_class %}{% endblock %}">
     <script>
         document.body.classList.add(
             'ea-content-width-' + (localStorage.getItem('ea/content/width') || 'normal'),
