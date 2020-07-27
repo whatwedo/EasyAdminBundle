@@ -1,0 +1,9 @@
+{# @var ea \EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext #}
+{# @var field \EasyCorp\Bundle\EasyAdminBundle\Dto\FieldDto #}
+{# @var entity \EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto #}
+{% form_theme new_form with ea.crud.formThemes only %}
+
+{{ block("main", "@EasyAdmin/crud/new.html.twig") }}
+<div class="page-actions">
+    {{ block("page_actions", "@EasyAdmin/crud/new.html.twig") }}
+</div>

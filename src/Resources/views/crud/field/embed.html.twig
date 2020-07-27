@@ -13,13 +13,36 @@
     fieldName: field.property
 }) %}
 
+{% set inlineCreate = field.customOption('inlineCreate') ? true : false %}
+
+{% if inlineCreate %}
+{% set create_url = ea_url().unset('entityId').setCrudId(crud_id).setAction('new').set('embedContext', {
+    mappedBy: field.doctrineMetadata.get('mappedBy'),
+    embeddedIn: entity.primaryKeyValue,
+    controllerFqcn: ea.crud.controllerFqcn,
+    fieldName: field.property
+}).set((field.doctrineMetadata.get('mappedBy')), entity.primaryKeyValue) %}
+{% endif %}
+
 {% set id_suffix = '-'~field.property %}
 
+{% if inlineCreate %}
+<div id="embed-create{{ id_suffix }}" class="position-relative embed-loading">
+    <div class="position-absolute text-center embed-spinner">
+        <div class="spinner-border text-primary spinner-border-lg mt-2"></div>
+    </div>
+    <div class="embed-content">
+        {# will be dynamically loaded #}
+    </div>
+</div>
+{% endif %}
 <div id="embed{{ id_suffix }}" class="position-relative embed-loading">
     <div class="position-absolute text-center embed-spinner">
         <div class="spinner-border text-primary spinner-border-lg mt-2"></div>
     </div>
-    <div class="embed-content"></div>
+    <div class="embed-content">
+        {# will be dynamically loaded, see embedded.html.twig #}
+    </div>
 </div>
 
 {{ include('@EasyAdmin/crud/includes/_delete_form.html.twig', {crud_id: crud_id, referrer: current_url, id_suffix: id_suffix}, with_context = false) }}
@@ -54,6 +77,11 @@
 
         const embed = document.querySelector('#embed{{ id_suffix }}');
         const embedContent = embed.querySelector('.embed-content');
+
+        {% if inlineCreate %}
+        const embedCreate = document.querySelector('#embed-create{{ id_suffix }}');
+        const embedCreateContent = embedCreate.querySelector('.embed-content');
+        {% endif %}
 
         const handleFormSubmit = evt => {
             evt.preventDefault();
@@ -173,6 +201,34 @@
             ;
         }
 
+        {% if inlineCreate %}
+        const loadCreate = async (url, data) => {
+            embedCreate.classList.add('embed-loading');
+            const response = await fetch(url, data ? {method: 'POST', body: data} : undefined);
+            embedCreate.classList.remove('embed-loading');
+            const text = await response.text();
+            if(response.headers.get('content-type').includes('application/json')) {
+                load(currentUrl);
+                loadCreate(url);
+            } else {
+                embedCreateContent.innerHTML = text;
+
+                // intercept create
+                embedCreateContent.querySelector('form').addEventListener('submit', ev => {
+                    ev.preventDefault();
+                    loadCreate(url, new FormData(ev.currentTarget));
+                })
+
+                // can be used to re-initialize dynamic content
+                document.dispatchEvent(new Event('ea.embed.content-loaded'))
+                document.dispatchEvent(new Event('ea.collection.item-added'))
+            };
+        }
+        {% endif %}
+
         load(initialUrl);
+        {% if inlineCreate %}
+        loadCreate('{{ create_url|raw }}');
+        {% endif %}
     })
 </script>

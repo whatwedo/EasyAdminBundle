@@ -16,6 +16,7 @@ final class TemplateRegistry
         'crud/index' => '@EasyAdmin/crud/index.html.twig',
         'crud/detail' => '@EasyAdmin/crud/detail.html.twig',
         'crud/embedded' => '@EasyAdmin/crud/embedded.html.twig',
+        'crud/embedded_create' => '@EasyAdmin/crud/embedded_create.html.twig',
         'crud/new' => '@EasyAdmin/crud/new.html.twig',
         'crud/edit' => '@EasyAdmin/crud/edit.html.twig',
         'crud/action' => '@EasyAdmin/crud/action.html.twig',

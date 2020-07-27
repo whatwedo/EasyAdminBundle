@@ -325,6 +325,8 @@ abstract class AbstractCrudController extends AbstractController implements Crud
         $this->get(EntityFactory::class)->processActions($context->getEntity(), $context->getCrud()->getActionsConfig());
         $entityInstance = $context->getEntity()->getInstance();
 
+        $embedContext = $context->getRequest()->query->get('embedContext');
+
         $newForm = $this->createNewForm($context->getEntity(), $context->getCrud()->getNewFormOptions(), $context);
         $newForm->handleRequest($context->getRequest());
         if ($newForm->isSubmitted() && $newForm->isValid()) {
@@ -339,6 +341,10 @@ abstract class AbstractCrudController extends AbstractController implements Crud
 
             $this->get('event_dispatcher')->dispatch(new AfterEntityPersistedEvent($entityInstance));
             $context->getEntity()->setInstance($entityInstance);
+
+            if($embedContext !== null) {
+                return new JsonResponse($context->getEntity()->getPrimaryKeyValue());
+            }
 
             $submitButtonName = $context->getRequest()->request->get('ea')['newForm']['btn'];
             if (Action::SAVE_AND_CONTINUE === $submitButtonName) {
@@ -368,7 +374,7 @@ abstract class AbstractCrudController extends AbstractController implements Crud
 
         $responseParameters = $this->configureResponseParameters(KeyValueStore::new([
             'pageName' => Crud::PAGE_NEW,
-            'templateName' => 'crud/new',
+            'templateName' => $embedContext ? 'crud/embedded_create' : 'crud/new',
             'entity' => $context->getEntity(),
             'new_form' => $newForm,
         ]));
