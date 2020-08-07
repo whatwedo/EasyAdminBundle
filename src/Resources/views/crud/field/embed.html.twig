@@ -24,7 +24,7 @@
 }).set((mapped_by), entity.primaryKeyValue) %}
 {% endif %}
 
-{% set id_suffix = '-'~field.property %}
+{% set id_suffix = '-'~field.property|replace({'.': '_'}) %}
 
 {% if inlineCreate %}
 <div id="embed-create{{ id_suffix }}" class="position-relative embed-loading">
