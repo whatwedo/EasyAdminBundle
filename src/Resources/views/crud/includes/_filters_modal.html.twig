@@ -20,9 +20,9 @@
     </div>
 </div>
 <script>
-    const filterModal = document.querySelector('#modal-filters');
+    var filterModal = document.querySelector('#modal-filters');
 
-    const submitForm = function(form) {
+    var submitForm = function(form) {
         if('function' === typeof form.requestSubmit) {
             form.requestSubmit();
         } else {
@@ -34,7 +34,7 @@
         }
     }
 
-    const removeFilter = function(field) {
+    var removeFilter = function(field) {
         field.closest('form').querySelectorAll('input[name^="filters['+field.dataset.filterProperty+']"]').forEach(hidden => {
             hidden.remove();
         });
