@@ -3,11 +3,11 @@
 {# @var entity \EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto #}
 {% set current_url = ea_url() %}
 
-{% set target_entity = field.doctrineMetadata.get('targetEntity') %}
-{% set crud_id = ea.crudControllers.findCrudIdByCrudFqcn(ea.crudControllers.findCrudFqcnByEntityFqcn(target_entity)) %}
+  {% set crud_id = ea.crudControllers.findCrudIdByCrudFqcn(field.customOption('crudControllerFqcn')) %}
+{% set mapped_by = field.customOption('mappedBy') %}
 
 {% set url = ea_url().unset('entityId').setCrudId(crud_id).setAction('index').set('embedContext', {
-    mappedBy: field.doctrineMetadata.get('mappedBy'),
+    mappedBy: mapped_by,
     embeddedIn: entity.primaryKeyValue,
     controllerFqcn: ea.crud.controllerFqcn,
     fieldName: field.property
@@ -17,11 +17,11 @@
 
 {% if inlineCreate %}
 {% set create_url = ea_url().unset('entityId').setCrudId(crud_id).setAction('new').set('embedContext', {
-    mappedBy: field.doctrineMetadata.get('mappedBy'),
+    mappedBy: mapped_by,
     embeddedIn: entity.primaryKeyValue,
     controllerFqcn: ea.crud.controllerFqcn,
     fieldName: field.property
-}).set((field.doctrineMetadata.get('mappedBy')), entity.primaryKeyValue) %}
+}).set((mapped_by), entity.primaryKeyValue) %}
 {% endif %}
 
 {% set id_suffix = '-'~field.property %}

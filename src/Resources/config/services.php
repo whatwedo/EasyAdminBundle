@@ -2,6 +2,8 @@
 
 namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
+use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Persistence\Mapping\ClassMetadataFactory;
 use EasyCorp\Bundle\EasyAdminBundle\ArgumentResolver\AdminContextResolver;
 use EasyCorp\Bundle\EasyAdminBundle\Cache\CacheWarmer;
 use EasyCorp\Bundle\EasyAdminBundle\Command\MakeAdminDashboardCommand;
@@ -35,6 +37,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\Configurator\CountryConfigurator;
 use EasyCorp\Bundle\EasyAdminBundle\Field\Configurator\CurrencyConfigurator;
 use EasyCorp\Bundle\EasyAdminBundle\Field\Configurator\DateTimeConfigurator;
 use EasyCorp\Bundle\EasyAdminBundle\Field\Configurator\EmailConfigurator;
+use EasyCorp\Bundle\EasyAdminBundle\Field\Configurator\EmbedConfigurator;
 use EasyCorp\Bundle\EasyAdminBundle\Field\Configurator\FormConfigurator;
 use EasyCorp\Bundle\EasyAdminBundle\Field\Configurator\IdConfigurator;
 use EasyCorp\Bundle\EasyAdminBundle\Field\Configurator\ImageConfigurator;
@@ -82,6 +85,7 @@ use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\Event\ControllerEvent;
 use Symfony\Component\HttpKernel\Event\ViewEvent;
 use Symfony\Component\HttpKernel\KernelInterface;
+use Symfony\Component\PropertyInfo\PropertyInfoExtractorInterface;
 use Symfony\Component\PropertyInfo\PropertyTypeExtractorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -304,6 +308,10 @@ return static function (ContainerConfigurator $container) {
             ->arg(1, new Reference(PropertyTypeExtractorInterface::class))
 
         ->set(EmailConfigurator::class)
+
+        ->set(EmbedConfigurator::class)
+        ->arg(0, new Reference(PropertyInfoExtractorInterface::class))
+        ->arg(1, new Reference(EntityManagerInterface::class))
 
         ->set(FormConfigurator::class)
             ->arg(0, new Reference(ActionFactory::class))

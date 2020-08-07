@@ -12,6 +12,7 @@ final class EmbedField implements FieldInterface
 {
     use FieldTrait;
 
+    public const OPTION_CRUD_CONTROLLER = 'crudControllerFqcn';
     public const OPTION_MODIFY_ACTIONS = 'modifyActions';
 
     public static function new(string $propertyName, ?string $label = null): self
@@ -22,6 +23,13 @@ final class EmbedField implements FieldInterface
             ->hideLabel()
             ->setTemplateName('crud/field/embed')
             ->setCustomOption(self::OPTION_MODIFY_ACTIONS, null);
+    }
+
+    public function setCrudController(string $crudControllerFqcn): self
+    {
+        $this->setCustomOption(self::OPTION_CRUD_CONTROLLER, $crudControllerFqcn);
+
+        return $this;
     }
 
     public function modifyActions(\Closure $configure): self
