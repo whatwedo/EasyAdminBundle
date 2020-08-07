@@ -128,7 +128,10 @@ abstract class AbstractCrudController extends AbstractController implements Crud
             $filterValue = $embedContext['embeddedIn'];
             $queryBuilder->andWhere($queryBuilder->expr()->eq(sprintf('%s.%s', current($queryBuilder->getRootAliases()), $filterProperty), $filterValue));
 
-            $fields->unset($fields->get($filterProperty));
+            $reverseRelationField = $fields->get($filterProperty);
+            if($reverseRelationField !== null) {
+                $fields->unset($reverseRelationField);
+            }
 
             $controllerFqcn = $embedContext['controllerFqcn'];
             $fieldName = $embedContext['fieldName'];
