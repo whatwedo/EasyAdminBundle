@@ -4,11 +4,12 @@
 {% set current_url = ea_url() %}
 
   {% set crud_id = ea.crudControllers.findCrudIdByCrudFqcn(field.customOption('crudControllerFqcn')) %}
+  {% set embeddedId = field.customOption('embeddedId') %}
 {% set mapped_by = field.customOption('mappedBy') %}
 
 {% set url = ea_url().unset('entityId').setCrudId(crud_id).setAction('index').set('embedContext', {
     mappedBy: mapped_by,
-    embeddedIn: entity.primaryKeyValue,
+    embeddedIn: embeddedId,
     controllerFqcn: ea.crud.controllerFqcn,
     fieldName: field.property
 }) %}
@@ -18,10 +19,10 @@
 {% if inlineCreate %}
 {% set create_url = ea_url().unset('entityId').setCrudId(crud_id).setAction('new').set('embedContext', {
     mappedBy: mapped_by,
-    embeddedIn: entity.primaryKeyValue,
+    embeddedIn: embeddedId,
     controllerFqcn: ea.crud.controllerFqcn,
     fieldName: field.property
-}).set((mapped_by), entity.primaryKeyValue) %}
+}).set((mapped_by), embeddedId) %}
 {% endif %}
 
 {% set id_suffix = '-'~field.property|replace({'.': '_'}) %}
