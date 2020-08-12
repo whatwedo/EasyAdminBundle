@@ -45,6 +45,8 @@ final class EmbedConfigurator implements FieldConfiguratorInterface
             $parentPath = implode('.', array_slice($pathParts, 0, -1));
             $property = array_slice($pathParts, -1, 1)[0];
 
+            $embeddedId = $entityDto->getInstance()->{'get'.ucfirst($pathParts[0])}()->getId();
+
             $parentType = $this->typeExtractor->getTypes($entityDto->getFqcn(), $parentPath)[0];
             $classMetadata = $this->entityManager->getClassMetadata($parentType->getClassName());
 
@@ -53,11 +55,13 @@ final class EmbedConfigurator implements FieldConfiguratorInterface
         } else {
             $targetEntityFqcn = $field->getDoctrineMetadata()->get('targetEntity');
             $mappedBy = $field->getDoctrineMetadata()->get('mappedBy');
+            $embeddedId = $entityDto->getPrimaryKeyValue();
         }
 
         $field->setCustomOption('mappedBy', $mappedBy);
 
         // the target CRUD controller can be NULL; in that case, field value doesn't link to the related entity
+        $field->setCustomOption(EmbedField::OPTION_EMBEDDED_ID, $embeddedId);
         $targetCrudControllerFqcn = $field->getCustomOption(EmbedField::OPTION_CRUD_CONTROLLER)
             ?? $context->getCrudControllers()->findCrudFqcnByEntityFqcn($targetEntityFqcn);
         $field->setCustomOption(EmbedField::OPTION_CRUD_CONTROLLER, $targetCrudControllerFqcn);

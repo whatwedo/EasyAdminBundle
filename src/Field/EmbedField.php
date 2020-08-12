@@ -13,6 +13,7 @@ final class EmbedField implements FieldInterface
     use FieldTrait;
 
     public const OPTION_CRUD_CONTROLLER = 'crudControllerFqcn';
+    public const OPTION_EMBEDDED_ID = 'embeddedId';
     public const OPTION_MODIFY_ACTIONS = 'modifyActions';
 
     public static function new(string $propertyName, ?string $label = null): self
