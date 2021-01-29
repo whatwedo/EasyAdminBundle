@@ -1,5 +1,4 @@
 {# @var ea \EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext #}
-<form method="post" id="delete-form" style="display: none">
 {% set delete_url = ea_url()
     .setController(crud_id ?? app.request.query.get('crudControllerFqcn'))
     .setAction('delete')
