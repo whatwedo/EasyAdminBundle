@@ -45,7 +45,9 @@ final class AssociationConfigurator implements FieldConfiguratorInterface
             throw new \RuntimeException(sprintf('The "%s" field is not a Doctrine association, so it cannot be used as an association field.', $propertyName));
         }
 
-        $targetEntityFqcn = $field->getDoctrineMetadata()->get('targetEntity');
+        $type = $this->typeExtractor->getTypes( $entityDto->getFqcn(), $propertyName)[0];
+
+        $targetEntityFqcn = $type->getClassName();
         // the target CRUD controller can be NULL; in that case, field value doesn't link to the related entity
         $targetCrudControllerFqcn = $field->getCustomOption(AssociationField::OPTION_CRUD_CONTROLLER)
             ?? $context->getCrudControllers()->findCrudFqcnByEntityFqcn($targetEntityFqcn);
